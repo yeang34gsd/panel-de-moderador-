@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Panel de Moderación - Intercambia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+        .seccion {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .seccion h2 {
+            color: #1a472a;
+            margin-bottom: 20px;
+            border-left: 4px solid #1a472a;
+            padding-left: 15px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .objeto-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.2s;
+            background: #fefefe;
+        }
+        .objeto-card.sospechoso {
+            border-left: 5px solid #e67e22;
+        }
+        .objeto-card.reportado {
+            border-left: 5px solid #e74c3c;
+        }
+        .objeto-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+        .info {
+            padding: 16px;
+        }
+        .info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+        .info p {
+            color: #475569;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px 4px 4px 0;
+        }
+        .badge-sospechoso {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .badge-reportado {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .badge-usuario {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+        .motivo {
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin: 12px 0;
+            border-left: 3px solid #94a3b8;
+        }
+        .botones {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .btn-aprobar {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            flex: 1;
+        }
+        .btn-aprobar:hover {
+            background: #059669;
+        }
+        .btn-bloquear {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            flex: 1;
+        }
+        .btn-bloquear:hover {
+            background: #dc2626;
+        }
+        .vacio {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            background: #f8fafc;
+            border-radius: 20px;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 24px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1a472a;
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        .refresh-btn {
+            background: #1a472a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .refresh-btn:hover {
+            background: #0f2c1c;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔒 Panel de Moderación</h1>
+    <div class="subtitle">Revisa contenido sospechoso y reportado. Tú decides si aprobar o bloquear.</div>
+
+    <div class="stats" id="stats">
+        <div class="stat-card">
+            <div class="stat-number" id="totalSospechosos">-</div>
+            <div class="stat-label">Pendientes (IA)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalReportados">-</div>
+            <div class="stat-label">Pendientes (Reportes)</div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" id="refreshBtn">🔄 Actualizar</button>
+
+    <div id="contenido"></div>
+</div>
+
+<script>
+    // ========== CONFIGURACIÓN ==========
+    const WORKER_URL = "https://subir-fotos-worker.yvellaurore02.workers.dev";
+
+    async function cargarPendientes() {
+        try {
+            const response = await fetch(`${WORKER_URL}/moderacion/pendientes`);
+            if (!response.ok) throw new Error('Error al cargar');
+            const datos = await response.json();
+            
+            // Actualizar stats
+            document.getElementById('totalSospechosos').innerText = datos.sospechosos?.length || 0;
+            document.getElementById('totalReportados').innerText = datos.reportados?.length || 0;
+            
+            let html = '';
+            
+            // ========== SECCIÓN: SOSPECHOSOS (IA) ==========
+            html += `<div class="seccion">
+                        <h2>🤖 Detectados por IA (sospechosos)</h2>`;
+            
+            if (!datos.sospechosos || datos.sospechosos.length === 0) {
+                html += `<div class="vacio">✅ No hay objetos sospechosos pendientes</div>`;
+            } else {
+                html += `<div class="grid">`;
+                for (const obj of datos.sospechosos) {
+                    html += `
+                        <div class="objeto-card sospechoso" data-id="${obj.id}">
+                            <img src="${obj.url}" alt="${escapeHtml(obj.titulo)}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+no+disponible'">
+                            <div class="info">
+                                <h3>${escapeHtml(obj.titulo)}</h3>
+                                <p>${escapeHtml(obj.descripcion?.substring(0, 150))}</p>
+                                <span class="badge badge-sospechoso">⚠️ Sospechoso (IA)</span>
+                                <span class="badge badge-usuario">👤 ${escapeHtml(obj.usuario)}</span>
+                                <div class="motivo">
+                                    <strong>🤖 Motivo IA:</strong> ${escapeHtml(obj.motivo_sospecha || 'NSFW detectado')}
+                                </div>
+                                <div class="botones">
+                                    <button class="btn-aprobar" data-id="${obj.id}">✅ Aprobar (no es malo)</button>
+                                    <button class="btn-bloquear" data-id="${obj.id}">❌ Bloquear (es malo)</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            }
+            html += `</div>`;
+            
+            // ========== SECCIÓN: REPORTADOS POR USUARIOS ==========
+            html += `<div class="seccion">
+                        <h2>📢 Reportados por usuarios</h2>`;
+            
+            if (!datos.reportados || datos.reportados.length === 0) {
+                html += `<div class="vacio">✅ No hay objetos reportados pendientes</div>`;
+            } else {
+                html += `<div class="grid">`;
+                for (const obj of datos.reportados) {
+                    html += `
+                        <div class="objeto-card reportado" data-id="${obj.id}">
+                            <img src="${obj.url}" alt="${escapeHtml(obj.titulo)}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+no+disponible'">
+                            <div class="info">
+                                <h3>${escapeHtml(obj.titulo)}</h3>
+                                <p>${escapeHtml(obj.descripcion?.substring(0, 150))}</p>
+                                <span class="badge badge-reportado">📢 Reportado</span>
+                                <span class="badge badge-usuario">👤 ${escapeHtml(obj.usuario)}</span>
+                                <div class="motivo">
+                                    <strong>🗣️ Motivo del reporte:</strong> ${escapeHtml(obj.motivo_reporte)}
+                                    <br><small>Reportado por: ${escapeHtml(obj.reportado_por)}</small>
+                                </div>
+                                <div class="botones">
+                                    <button class="btn-aprobar" data-id="${obj.id}">✅ Aprobar (no es malo)</button>
+                                    <button class="btn-bloquear" data-id="${obj.id}">❌ Bloquear (es malo)</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+            }
+            html += `</div>`;
+            
+            document.getElementById('contenido').innerHTML = html;
+            
+            // Asignar eventos a los botones
+            document.querySelectorAll('.btn-aprobar').forEach(btn => {
+                btn.addEventListener('click', () => moderar(btn.dataset.id, 'aprobar'));
+            });
+            document.querySelectorAll('.btn-bloquear').forEach(btn => {
+                btn.addEventListener('click', () => moderar(btn.dataset.id, 'bloquear'));
+            });
+            
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('contenido').innerHTML = `<div class="vacio">❌ Error al cargar: ${error.message}</div>`;
+        }
+    }
+    
+    async function moderar(id, accion) {
+        const accionTexto = accion === 'aprobar' ? 'aprobar' : 'bloquear';
+        const confirmacion = confirm(`¿Estás seguro de ${accionTexto} esta publicación?`);
+        if (!confirmacion) return;
+        
+        try {
+            const response = await fetch(`${WORKER_URL}/moderacion/decidir`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: parseInt(id), accion })
+            });
+            
+            if (!response.ok) throw new Error('Error al guardar');
+            
+            alert(`✅ Publicación ${accionTexto === 'aprobar' ? 'aprobada' : 'bloqueada y eliminada'}`);
+            cargarPendientes(); // Recargar la lista
+        } catch (error) {
+            alert('❌ Error: ' + error.message);
+        }
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    document.getElementById('refreshBtn').addEventListener('click', () => cargarPendientes());
+    
+    // Cargar al iniciar
+    cargarPendientes();
+    
+    // Auto-refrescar cada 30 segundos
+    setInterval(cargarPendientes, 30000);
+</script>
+</body>
+</html>
