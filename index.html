@@ -3,149 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔒 Panel de Moderación - Intercambia</title>
+    <title>Intercambia - Trueque de objetos</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: system-ui, 'Segoe UI', sans-serif;
-            background: #1a1a2e;
+            background: linear-gradient(145deg, #1a472a 0%, #0f2c1c 100%);
+            min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
-        h1 { color: white; margin-bottom: 10px; }
-        .subtitle { color: #aaa; margin-bottom: 30px; }
-        .seccion {
+        .container { max-width: 1300px; margin: 0 auto; }
+        .card {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 24px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 24px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
         }
-        .seccion h2 {
-            color: #1a472a;
-            margin-bottom: 20px;
-            border-left: 4px solid #1a472a;
-            padding-left: 15px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-        }
-        .objeto-card {
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            overflow: hidden;
-            transition: 0.2s;
-            background: #fefefe;
-        }
-        .objeto-card.sospechoso { border-left: 5px solid #e67e22; }
-        .objeto-card.reportado { border-left: 5px solid #e74c3c; }
-        .objeto-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #f1f5f9;
-        }
-        .info { padding: 16px; }
-        .info h3 { font-size: 1.2rem; margin-bottom: 8px; color: #1e293b; }
-        .info p { color: #475569; font-size: 0.9rem; margin-bottom: 12px; }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 60px;
-            font-size: 12px;
-            font-weight: 600;
-            margin: 4px 4px 4px 0;
-        }
-        .badge-sospechoso { background: #fef3c7; color: #92400e; }
-        .badge-reportado { background: #fee2e2; color: #991b1b; }
-        .badge-usuario { background: #e0e7ff; color: #3730a3; }
-        .motivo {
-            background: #f8fafc;
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            margin: 12px 0;
-            border-left: 3px solid #94a3b8;
-        }
-        .botones { display: flex; gap: 12px; margin-top: 16px; }
-        .btn-aprobar {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            flex: 1;
-        }
-        .btn-bloquear {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            flex: 1;
-        }
-        .vacio {
-            text-align: center;
-            padding: 40px;
-            color: #64748b;
-            background: #f8fafc;
-            border-radius: 20px;
-        }
-        .stats {
+        h1 { font-size: 2rem; color: #1a472a; margin-bottom: 4px; }
+        .subtitle { color: #4a6741; margin-bottom: 24px; }
+        .nav-buttons {
             display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 12px;
             flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
         }
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 16px 24px;
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 8px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: 0.2s;
+            color: #4a6741;
         }
-        .stat-number { font-size: 2rem; font-weight: bold; color: #1a472a; }
-        .stat-label { color: #64748b; font-size: 0.85rem; }
-        .refresh-btn {
+        .nav-btn.active {
             background: #1a472a;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .login-card {
-            background: white;
+        .upload-area {
+            border: 3px dashed #4a6741;
             border-radius: 24px;
-            padding: 32px;
+            padding: 40px;
             text-align: center;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .google-btn {
-            background: #4285f4;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
             cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
+            background: #f8faf0;
+            transition: 0.2s;
         }
-        input {
+        .upload-area:hover { background: #eef3e6; border-color: #1a472a; }
+        input, textarea {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
@@ -153,203 +64,683 @@
             border-radius: 60px;
             font-size: 1rem;
         }
+        textarea { border-radius: 20px; resize: vertical; }
+        button {
+            background: #1a472a;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background: #0f2c1c; transform: scale(1.02); }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .objeto-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+            transition: 0.2s;
+            position: relative;
+        }
+        .objeto-card:hover { transform: translateY(-5px); }
+        .objeto-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .objeto-info { padding: 16px; }
+        .badge {
+            background: #1a472a;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 12px;
+            display: inline-block;
+            margin: 8px 0;
+        }
+        .badge-expiracion {
+            background: #e67e22;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 11px;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .badge-sospechoso {
+            background: #e67e22;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 11px;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        .intercambiar-btn {
+            background: #1a472a;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 60px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .reportar-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 60px;
+            cursor: pointer;
+            margin-top: 5px;
+            width: 100%;
+            font-size: 12px;
+        }
+        .reportar-btn:hover { background: #d35400; }
+        .eliminar-btn {
+            background: #991b1b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 60px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .eliminar-btn:hover { background: #7f1d1d; }
+        .chat-container {
+            background: #f8faf0;
+            border-radius: 24px;
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .mensaje {
+            background: white;
+            border-radius: 20px;
+            padding: 10px 16px;
+            margin-bottom: 12px;
+            max-width: 80%;
+        }
+        .mensaje.emisor {
+            background: #1a472a;
+            color: white;
+            margin-left: auto;
+        }
+        .mensaje.receptor {
+            background: #e2e8f0;
+        }
+        .mensaje small {
+            font-size: 10px;
+            opacity: 0.7;
+            display: block;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .chat-input input {
+            flex: 1;
+            margin: 0;
+        }
+        .login-section input {
+            margin: 8px 0;
+        }
+        .flex-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .user-info {
+            background: #eef2ff;
+            padding: 12px;
+            border-radius: 60px;
+            margin-top: 16px;
+            text-align: center;
+        }
+        .status-success {
+            background: #bbf7d0;
+            color: #166534;
+            padding: 12px;
+            border-radius: 60px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 60px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        .status-info {
+            background: #dbeafe;
+            color: #1e3a8a;
+            padding: 12px;
+            border-radius: 60px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        .progress-container {
+            background: #e2e8f0;
+            border-radius: 40px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 8px;
+            background: #1a472a;
+            transition: width 0.2s;
+        }
+        .conv-item {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .conv-item:hover {
+            background: #f0f4e8;
+        }
+        @media (max-width: 700px) {
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>🔒 Panel de Moderación</h1>
-    <div class="subtitle">Revisa contenido sospechoso y reportado. Tú decides si aprobar o bloquear.</div>
-
-    <div id="loginSection" style="display:none;" class="login-card">
-        <h2>🔐 Acceso de moderador</h2>
-        <p style="margin:16px 0;">Solo para moderadores autorizados</p>
-        <button id="googleLoginBtn" class="google-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24">
-                <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="white" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Iniciar sesión con Google
-        </button>
-        <div id="userInfo" style="margin-top:16px;"></div>
+    <div class="card">
+        <h1>🔄 Intercambia</h1>
+        <div class="subtitle">Trueque de objetos: publica lo que ofreces y conversa</div>
     </div>
 
-    <div id="moderacionContent" style="display:none;">
-        <div class="stats">
-            <div class="stat-card"><div class="stat-number" id="totalSospechosos">-</div><div class="stat-label">Pendientes (IA)</div></div>
-            <div class="stat-card"><div class="stat-number" id="totalReportados">-</div><div class="stat-label">Pendientes (Reportes)</div></div>
+    <!-- LOGIN -->
+    <div class="card" id="loginSection">
+        <h3>🔐 Acceso</h3>
+        <input type="email" id="email" placeholder="Correo electrónico">
+        <input type="password" id="password" placeholder="Contraseña">
+        <div class="flex-buttons">
+            <button id="loginBtn">Iniciar sesión</button>
+            <button id="registerBtn" style="background:#6c757d;">Registrarse</button>
+            <button id="logoutBtn" style="display:none; background:#6c757d;">Cerrar sesión</button>
         </div>
-        <button class="refresh-btn" id="refreshBtn">🔄 Actualizar</button>
-        <div id="contenido"></div>
+        <div id="userInfo" class="user-info" style="display:none;"></div>
+    </div>
+
+    <!-- APP (oculta hasta login) -->
+    <div id="appSections" style="display:none;">
+        <div class="card">
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-tab="feed">📦 Objetos disponibles</button>
+                <button class="nav-btn" data-tab="publicar">➕ Publicar objeto</button>
+                <button class="nav-btn" data-tab="misobjetos">📋 Mis objetos</button>
+                <button class="nav-btn" data-tab="chats">💬 Mis conversaciones</button>
+            </div>
+
+            <!-- FEED -->
+            <div id="tab-feed">
+                <h3>✨ Objetos para intercambiar</h3>
+                <div id="feedGrid" class="grid">Cargando...</div>
+            </div>
+
+            <!-- PUBLICAR -->
+            <div id="tab-publicar" style="display:none;">
+                <h3>📸 Publicar un objeto</h3>
+                <input type="text" id="titulo" placeholder="Título del objeto">
+                <textarea id="descripcion" rows="2" placeholder="Descripción (estado, qué buscas a cambio...)"></textarea>
+                <div class="upload-area" id="uploadArea">
+                    <div>📁 Haz clic o arrastra una foto</div>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none;">
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <button id="publicarBtn">Publicar objeto</button>
+                <div id="pubStatus"></div>
+            </div>
+
+            <!-- MIS OBJETOS -->
+            <div id="tab-misobjetos" style="display:none;">
+                <h3>📌 Mis objetos publicados</h3>
+                <div id="misObjetosGrid" class="grid">Cargando...</div>
+            </div>
+
+            <!-- CHATS -->
+            <div id="tab-chats" style="display:none;">
+                <h3>💬 Conversaciones activas</h3>
+                <div id="listaChats"></div>
+                <div id="chatDetalle" style="margin-top:24px; display:none;">
+                    <h4 id="chatTitulo"></h4>
+                    <div id="chatMensajes" class="chat-container"></div>
+                    <div class="chat-input">
+                        <input type="text" id="nuevoMensaje" placeholder="Escribe un mensaje...">
+                        <button id="enviarMensajeBtn">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
+    // ========== CONFIGURACIÓN (REEMPLAZA CON TUS URLs) ==========
     const WORKER_URL = "https://subir-fotos-worker.yvellaurore02.workers.dev";
+    const R2_PUBLIC_URL = "https://pub-ec355fc78ea64824955ad7015e4e7353.r2.dev";
     let currentUser = null;
-    let authToken = null;
+    let chatActual = { objetoId: null, otroUsuario: null, titulo: null };
 
-    function getTokenFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get('token');
-        if (token) {
-            localStorage.setItem('auth_token_mod', token);
-            window.history.replaceState({}, document.title, window.location.pathname);
-            return token;
+    // ========== USUARIOS ==========
+    function registerUser(email, password) {
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        if (users[email]) throw new Error('El usuario ya existe');
+        users[email] = { password: btoa(password) };
+        localStorage.setItem('app_users', JSON.stringify(users));
+        return true;
+    }
+
+    function loginUser(email, password) {
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        const user = users[email];
+        if (!user || user.password !== btoa(password)) throw new Error('Email o contraseña incorrectos');
+        currentUser = { email };
+        localStorage.setItem('app_currentUser', JSON.stringify(currentUser));
+        return true;
+    }
+
+    function logoutUser() {
+        currentUser = null;
+        localStorage.removeItem('app_currentUser');
+    }
+
+    // ========== API ==========
+    async function api(method, path, body = null) {
+        const opts = { method, headers: {} };
+        if (body && !(body instanceof FormData)) {
+            opts.headers['Content-Type'] = 'application/json';
+            opts.body = JSON.stringify(body);
+        } else if (body instanceof FormData) {
+            opts.body = body;
         }
-        return localStorage.getItem('auth_token_mod');
+        const res = await fetch(`${WORKER_URL}${path}`, opts);
+        if (!res.ok) {
+            const error = await res.text();
+            throw new Error(error);
+        }
+        return res.json();
     }
 
-    async function verifyToken(token) {
+    async function publicarObjeto(titulo, descripcion, file) {
+        const form = new FormData();
+        form.append('file', file);
+        form.append('usuario', currentUser.email);
+        form.append('titulo', titulo);
+        form.append('descripcion', descripcion);
+        return await api('POST', '/objeto', form);
+    }
+
+    async function obtenerObjetos(propios = false) {
+        if (propios) {
+            return await api('GET', `/mis-objetos?usuario=${encodeURIComponent(currentUser.email)}`);
+        } else {
+            return await api('GET', '/objetos');
+        }
+    }
+
+    async function eliminarObjeto(id) {
+        const response = await fetch(`${WORKER_URL}/objeto/${id}?usuario=${encodeURIComponent(currentUser.email)}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            const error = await response.text();
+            throw new Error(error);
+        }
+        return response.json();
+    }
+
+    async function reportarObjeto(idObjeto, motivo) {
+        return await api('POST', '/reporte', {
+            id_objeto: idObjeto,
+            reportado_por: currentUser.email,
+            motivo: motivo
+        });
+    }
+
+    async function enviarMensaje(objetoId, receptor, mensaje) {
+        return await api('POST', '/mensaje', {
+            id_objeto: objetoId,
+            emisor: currentUser.email,
+            receptor: receptor,
+            mensaje: mensaje
+        });
+    }
+
+    async function obtenerMensajes(objetoId, otroUsuario) {
+        return await api('GET', `/mensajes?id_objeto=${objetoId}&usuario=${encodeURIComponent(currentUser.email)}&otro=${encodeURIComponent(otroUsuario)}`);
+    }
+
+    async function obtenerMisConversaciones() {
+        return await api('GET', `/mis-conversaciones?usuario=${encodeURIComponent(currentUser.email)}`);
+    }
+
+    // ========== UI ==========
+    function updateUIForUser() {
+        const loginSection = document.getElementById('loginSection');
+        const appSections = document.getElementById('appSections');
+        const userInfoDiv = document.getElementById('userInfo');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if (currentUser) {
+            loginSection.querySelector('h3').innerText = '✅ Sesión activa';
+            loginBtn.style.display = 'none';
+            registerBtn.style.display = 'none';
+            logoutBtn.style.display = 'inline-block';
+            userInfoDiv.style.display = 'block';
+            userInfoDiv.innerHTML = `👤 ${currentUser.email}`;
+            appSections.style.display = 'block';
+            cargarFeed();
+            cargarMisObjetos();
+        } else {
+            loginSection.querySelector('h3').innerText = '🔐 Accede o regístrate';
+            loginBtn.style.display = 'inline-block';
+            registerBtn.style.display = 'inline-block';
+            logoutBtn.style.display = 'none';
+            userInfoDiv.style.display = 'none';
+            appSections.style.display = 'none';
+        }
+    }
+
+    async function cargarFeed() {
         try {
-            const response = await fetch(`${WORKER_URL}/auth/me`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!response.ok) return null;
-            const data = await response.json();
-            return data.user;
-        } catch (e) { return null; }
-    }
-
-    function loginWithGoogle() {
-        window.location.href = `${WORKER_URL}/auth/google?redirect=${encodeURIComponent(window.location.href)}`;
-    }
-
-    async function cargarPendientes() {
-        try {
-            const response = await fetch(`${WORKER_URL}/moderacion/pendientes`, {
-                headers: { 'Authorization': `Bearer ${authToken}` }
-            });
-            if (response.status === 403) {
-                document.getElementById('contenido').innerHTML = '<div class="vacio">❌ No autorizado. Solo el moderador puede acceder.</div>';
+            const objetos = await obtenerObjetos(false);
+            const feedDiv = document.getElementById('feedGrid');
+            if (!objetos.length) {
+                feedDiv.innerHTML = '<p>📭 No hay objetos publicados aún. ¡Sé el primero!</p>';
                 return;
             }
-            if (!response.ok) throw new Error('Error al cargar');
-            const datos = await response.json();
+            feedDiv.innerHTML = objetos.map(obj => `
+                <div class="objeto-card">
+                    <img src="${obj.url}" alt="${escapeHtml(obj.titulo)}">
+                    <div class="objeto-info">
+                        <strong>${escapeHtml(obj.titulo)}</strong>
+                        <p>${escapeHtml(obj.descripcion?.substring(0, 100))}</p>
+                        <span class="badge">👤 ${escapeHtml(obj.usuario)}</span>
+                        ${obj.sospechoso === 1 ? '<span class="badge-sospechoso">⚠️ En revisión</span>' : ''}
+                        ${obj.usuario !== currentUser.email ? `
+                            <button class="intercambiar-btn" data-id="${obj.id}" data-usuario="${escapeHtml(obj.usuario)}" data-titulo="${escapeHtml(obj.titulo)}">💬 Intercambiar</button>
+                            <button class="reportar-btn" data-id="${obj.id}" data-titulo="${escapeHtml(obj.titulo)}">⚠️ Reportar</button>
+                        ` : '<span style="font-size:12px;">(tu objeto)</span>'}
+                    </div>
+                </div>
+            `).join('');
             
-            document.getElementById('totalSospechosos').innerText = datos.sospechosos?.length || 0;
-            document.getElementById('totalReportados').innerText = datos.reportados?.length || 0;
-            
-            let html = '';
-            
-            // Sospechosos por IA
-            html += `<div class="seccion"><h2>🤖 Detectados por IA (sospechosos)</h2>`;
-            if (!datos.sospechosos || datos.sospechosos.length === 0) {
-                html += `<div class="vacio">✅ No hay objetos sospechosos pendientes</div>`;
-            } else {
-                html += `<div class="grid">`;
-                for (const obj of datos.sospechosos) {
-                    html += `
-                        <div class="objeto-card sospechoso">
-                            <img src="${obj.url}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+no+disponible'">
-                            <div class="info">
-                                <h3>${escapeHtml(obj.titulo)}</h3>
-                                <p>${escapeHtml(obj.descripcion?.substring(0, 100))}</p>
-                                <span class="badge badge-sospechoso">⚠️ Sospechoso (IA)</span>
-                                <span class="badge badge-usuario">👤 ${escapeHtml(obj.usuario)}</span>
-                                <div class="motivo"><strong>🤖 Motivo IA:</strong> ${escapeHtml(obj.motivo_sospecha || 'NSFW detectado')}</div>
-                                <div class="botones">
-                                    <button class="btn-aprobar" data-id="${obj.id}">✅ Aprobar</button>
-                                    <button class="btn-bloquear" data-id="${obj.id}">❌ Bloquear</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-                html += `</div>`;
-            }
-            html += `</div>`;
-            
-            // Reportados por usuarios
-            html += `<div class="seccion"><h2>📢 Reportados por usuarios</h2>`;
-            if (!datos.reportados || datos.reportados.length === 0) {
-                html += `<div class="vacio">✅ No hay objetos reportados pendientes</div>`;
-            } else {
-                html += `<div class="grid">`;
-                for (const obj of datos.reportados) {
-                    html += `
-                        <div class="objeto-card reportado">
-                            <img src="${obj.url}" onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+no+disponible'">
-                            <div class="info">
-                                <h3>${escapeHtml(obj.titulo)}</h3>
-                                <p>${escapeHtml(obj.descripcion?.substring(0, 100))}</p>
-                                <span class="badge badge-reportado">📢 Reportado</span>
-                                <span class="badge badge-usuario">👤 ${escapeHtml(obj.usuario)}</span>
-                                <div class="motivo"><strong>🗣️ Motivo:</strong> ${escapeHtml(obj.motivo_reporte)}<br><small>Reportado por: ${escapeHtml(obj.reportado_por)}</small></div>
-                                <div class="botones">
-                                    <button class="btn-aprobar" data-id="${obj.id}">✅ Aprobar</button>
-                                    <button class="btn-bloquear" data-id="${obj.id}">❌ Bloquear</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-                html += `</div>`;
-            }
-            html += `</div>`;
-            
-            document.getElementById('contenido').innerHTML = html;
-            
-            document.querySelectorAll('.btn-aprobar').forEach(btn => {
-                btn.addEventListener('click', () => moderar(btn.dataset.id, 'aprobar'));
+            document.querySelectorAll('.intercambiar-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.dataset.id);
+                    const otro = btn.dataset.usuario;
+                    const titulo = btn.dataset.titulo;
+                    abrirChatConObjeto(id, otro, titulo);
+                });
             });
-            document.querySelectorAll('.btn-bloquear').forEach(btn => {
-                btn.addEventListener('click', () => moderar(btn.dataset.id, 'bloquear'));
+            
+            document.querySelectorAll('.reportar-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const motivo = prompt('¿Por qué reportas este objeto? (ej: desnudo, spam, violencia, etc.)');
+                    if (motivo && motivo.trim()) {
+                        try {
+                            await reportarObjeto(parseInt(btn.dataset.id), motivo);
+                            alert('✅ Reporte enviado. Gracias por ayudar a mantener la comunidad segura.');
+                        } catch (e) {
+                            alert('❌ Error al reportar: ' + e.message);
+                        }
+                    }
+                });
             });
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('contenido').innerHTML = `<div class="vacio">❌ Error al cargar: ${error.message}</div>`;
+        } catch (e) {
+            console.error(e);
+            document.getElementById('feedGrid').innerHTML = '<p>❌ Error al cargar objetos</p>';
         }
     }
-    
-    async function moderar(id, accion) {
-        const confirmacion = confirm(`¿Estás seguro de ${accion === 'aprobar' ? 'aprobar' : 'bloquear'} esta publicación?`);
-        if (!confirmacion) return;
-        
+
+    async function cargarMisObjetos() {
         try {
-            const response = await fetch(`${WORKER_URL}/moderacion/decidir`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-                body: JSON.stringify({ id: parseInt(id), accion })
+            const objetos = await obtenerObjetos(true);
+            const div = document.getElementById('misObjetosGrid');
+            if (!objetos.length) {
+                div.innerHTML = '<p>📭 No has publicado nada aún.</p>';
+                return;
+            }
+            div.innerHTML = objetos.map(obj => `
+                <div class="objeto-card">
+                    <img src="${obj.url}" alt="${escapeHtml(obj.titulo)}">
+                    <div class="objeto-info">
+                        <strong>${escapeHtml(obj.titulo)}</strong>
+                        <p>${escapeHtml(obj.descripcion?.substring(0, 80))}</p>
+                        <span class="badge">👤 Tú</span>
+                        <span class="badge-expiracion">⏰ Expira: ${new Date(obj.expira).toLocaleDateString()}</span>
+                        ${obj.sospechoso === 1 ? '<span class="badge-sospechoso">⚠️ En revisión por IA</span>' : ''}
+                        <button class="eliminar-btn" data-id="${obj.id}">🗑️ Eliminar publicación</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.eliminar-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if (confirm('¿Eliminar esta publicación? Se borrará la foto y los mensajes asociados.')) {
+                        try {
+                            await eliminarObjeto(parseInt(btn.dataset.id));
+                            alert('✅ Publicación eliminada');
+                            cargarMisObjetos();
+                            cargarFeed();
+                        } catch (e) {
+                            alert('❌ Error: ' + e.message);
+                        }
+                    }
+                });
             });
-            if (!response.ok) throw new Error('Error al guardar');
-            alert(`✅ Publicación ${accion === 'aprobar' ? 'aprobada' : 'bloqueada y eliminada'}`);
-            cargarPendientes();
-        } catch (error) {
-            alert('❌ Error: ' + error.message);
+        } catch (e) {
+            console.error(e);
         }
     }
-    
+
+    async function abrirChatConObjeto(objetoId, otroUsuario, titulo) {
+        chatActual = { objetoId, otroUsuario, titulo };
+        document.getElementById('chatTitulo').innerHTML = `💬 ${escapeHtml(titulo)}<br><small>Conversando con ${escapeHtml(otroUsuario)}</small>`;
+        document.getElementById('chatDetalle').style.display = 'block';
+        await cargarMensajes();
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-tab="chats"]').classList.add('active');
+        document.querySelectorAll('[id^="tab-"]').forEach(div => div.style.display = 'none');
+        document.getElementById('tab-chats').style.display = 'block';
+        cargarListaConversaciones();
+    }
+
+    async function cargarMensajes() {
+        if (!chatActual.objetoId) return;
+        const msgs = await obtenerMensajes(chatActual.objetoId, chatActual.otroUsuario);
+        const cont = document.getElementById('chatMensajes');
+        if (!msgs.length) {
+            cont.innerHTML = '<p style="text-align:center;">✨ No hay mensajes aún. Escribe algo para empezar la conversación.</p>';
+            return;
+        }
+        cont.innerHTML = msgs.map(m => `
+            <div class="mensaje ${m.emisor === currentUser.email ? 'emisor' : 'receptor'}">
+                <strong>${m.emisor === currentUser.email ? 'Tú' : escapeHtml(m.emisor)}</strong>: ${escapeHtml(m.mensaje)}
+                <small>${new Date(m.fecha).toLocaleString()}</small>
+            </div>
+        `).join('');
+        cont.scrollTop = cont.scrollHeight;
+    }
+
+    async function enviarMensajeChat() {
+        const input = document.getElementById('nuevoMensaje');
+        const texto = input.value.trim();
+        if (!texto || !chatActual.objetoId) return;
+        await enviarMensaje(chatActual.objetoId, chatActual.otroUsuario, texto);
+        input.value = '';
+        await cargarMensajes();
+    }
+
+    async function cargarListaConversaciones() {
+        const convs = await obtenerMisConversaciones();
+        const listaDiv = document.getElementById('listaChats');
+        if (!convs.length) {
+            listaDiv.innerHTML = '<p>💬 No hay conversaciones activas aún. Intercambia con alguien para empezar.</p>';
+            return;
+        }
+        listaDiv.innerHTML = convs.map(c => `
+            <div class="conv-item" data-id="${c.id_objeto}" data-otro="${escapeHtml(c.otroUsuario)}" data-titulo="${escapeHtml(c.titulo)}">
+                <strong>📦 ${escapeHtml(c.titulo)}</strong><br>
+                💬 con ${escapeHtml(c.otroUsuario)}<br>
+                <small>Último mensaje: ${new Date(c.ultimaFecha).toLocaleString()}</small>
+            </div>
+        `).join('');
+        document.querySelectorAll('.conv-item').forEach(el => {
+            el.addEventListener('click', () => {
+                abrirChatConObjeto(parseInt(el.dataset.id), el.dataset.otro, el.dataset.titulo);
+            });
+        });
+    }
+
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
     }
-    
-    document.getElementById('refreshBtn').addEventListener('click', () => cargarPendientes());
-    document.getElementById('googleLoginBtn').onclick = () => loginWithGoogle();
-    
-    async function init() {
-        const token = getTokenFromURL();
-        if (token) {
-            authToken = token;
-            const user = await verifyToken(token);
-            if (user) {
-                currentUser = user;
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('moderacionContent').style.display = 'block';
-                cargarPendientes();
-                setInterval(cargarPendientes, 30000);
-            } else {
-                localStorage.removeItem('auth_token_mod');
-                document.getElementById('loginSection').style.display = 'block';
-            }
-        } else {
-            document.getElementById('loginSection').style.display = 'block';
+
+    function showStatus(msg, type, elementId = 'pubStatus') {
+        const div = document.getElementById(elementId);
+        if (!div) return;
+        div.className = `status-${type}`;
+        div.innerText = msg;
+        setTimeout(() => {
+            div.className = '';
+            div.innerText = '';
+        }, 3000);
+    }
+
+    // ========== EVENTOS ==========
+    document.getElementById('loginBtn').onclick = () => {
+        try {
+            loginUser(document.getElementById('email').value, document.getElementById('password').value);
+            updateUIForUser();
+            showStatus('✅ Sesión iniciada', 'success', 'pubStatus');
+        } catch (e) {
+            showStatus(e.message, 'error', 'pubStatus');
         }
+    };
+
+    document.getElementById('registerBtn').onclick = () => {
+        try {
+            registerUser(document.getElementById('email').value, document.getElementById('password').value);
+            showStatus('✅ Registrado exitoso. Ahora inicia sesión.', 'success', 'pubStatus');
+        } catch (e) {
+            showStatus(e.message, 'error', 'pubStatus');
+        }
+    };
+
+    document.getElementById('logoutBtn').onclick = () => {
+        logoutUser();
+        updateUIForUser();
+        showStatus('Sesión cerrada', 'info', 'pubStatus');
+    };
+
+    document.getElementById('publicarBtn').onclick = async () => {
+        const titulo = document.getElementById('titulo').value;
+        const descripcion = document.getElementById('descripcion').value;
+        const file = document.getElementById('fileInput').files[0];
+        if (!titulo || !descripcion || !file) {
+            showStatus('❌ Completa título, descripción y foto', 'error', 'pubStatus');
+            return;
+        }
+        const progressBar = document.getElementById('progressBar');
+        try {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress = Math.min(progress + 10, 90);
+                progressBar.style.width = `${progress}%`;
+            }, 200);
+            const resultado = await publicarObjeto(titulo, descripcion, file);
+            clearInterval(interval);
+            progressBar.style.width = '100%';
+            if (resultado.sospechoso) {
+                showStatus('⚠️ Publicación recibida. Pasará por revisión moderadora.', 'info', 'pubStatus');
+            } else {
+                showStatus('✅ Objeto publicado correctamente', 'success', 'pubStatus');
+            }
+            setTimeout(() => { progressBar.style.width = '0%'; }, 2000);
+            document.getElementById('titulo').value = '';
+            document.getElementById('descripcion').value = '';
+            document.getElementById('fileInput').value = '';
+            cargarMisObjetos();
+            cargarFeed();
+        } catch (e) {
+            showStatus('❌ Error: ' + e.message, 'error', 'pubStatus');
+            progressBar.style.width = '0%';
+        }
+    };
+
+    document.getElementById('enviarMensajeBtn').onclick = () => enviarMensajeChat();
+    document.getElementById('nuevoMensaje').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') enviarMensajeChat();
+    });
+
+    // Navegación pestañas
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tab = btn.dataset.tab;
+            document.querySelectorAll('[id^="tab-"]').forEach(div => div.style.display = 'none');
+            document.getElementById(`tab-${tab}`).style.display = 'block';
+            if (tab === 'feed') cargarFeed();
+            if (tab === 'misobjetos') cargarMisObjetos();
+            if (tab === 'chats') cargarListaConversaciones();
+        });
+    });
+
+    // Subida de foto
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.background = '#eef3e6';
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.background = '#f8faf0';
+    });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.background = '#f8faf0';
+        fileInput.files = e.dataTransfer.files;
+    });
+
+    // Restaurar sesión
+    const saved = localStorage.getItem('app_currentUser');
+    if (saved) {
+        currentUser = JSON.parse(saved);
+        updateUIForUser();
+    } else {
+        updateUIForUser();
     }
-    
-    init();
 </script>
 </body>
 </html>
